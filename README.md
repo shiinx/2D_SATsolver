@@ -5,4 +5,4 @@
 Poh Shi Hui  
 
 ## 2D Brief  
-![Image of Brief](/images/2D_Brief.png)  
+![Image of Brief](/2D_Brief.png)  
