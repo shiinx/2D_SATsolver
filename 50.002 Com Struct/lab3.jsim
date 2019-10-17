@@ -1,0 +1,85 @@
+.include "C:\Users\User\Desktop\50002\nominal.jsim"
+.include "C:\Users\User\Desktop\50002\stdcell.jsim"
+.include "C:\Users\User\Desktop\50002\lab3checkoff_6.jsim"
+
+.subckt outZ S[31:0] z
+Xor1 S[0:7] S[8:15] S[16:23] S[24:31] i[7:0] or4
+Xor2 i[1:0] i[3:2] i[5:4] i[7:6] j[1:0] or4
+Xnor1 j[1] j[0] z nor2
+.ends
+
+.subckt outXB B[31:0] ALUFN[0] xb[31:0]
+Xor B[31:0] ALUFN0#32 xb[31:0] xor2
+.ends
+
+.subckt outV A31 B31 S31 v
+Xinv1 A31 iA31 inverter
+Xinv2 B31 iB31 inverter
+Xinv3 S31 iS31 inverter
+Xand1 A31 B31 iS31 a and3
+Xand2 iA31 iB31 S31 b and3
+Xor a b v or2
+.ends
+
+.subckt outN S31 n
+.connect S31 n
+.ends
+
+.subckt FA A B Ci s co
+Xx1 A B out1 xor2
+Xx2 out1 Ci s xor2
+Xn1 A ci out2 nand2
+Xn2 A B out3 nand2
+Xn3 B Ci out4 nand2
+Xn4 out2 out3 out4 co nand3 
+.ends
+
+.subckt adder32 ALUFN[0] A[31:0] B[31:0] s[31:0] z v n
+Xb B[31:0] ALUFN[0] xb[31:0] outXB
+Xadd1 A[0] xb[0] ALUFN[0] s[0] ci[0] FA
+Xadd2 A[31:1] xb[31:1] ci[30:0] s[31:1] ci[31:1] FA
+Xz s[31:0] z outZ
+Xv A[31] xb[31] s[31] v outV
+Xn s[31] n outN
+.ends
+
+.subckt compare32 ALUFN[2:1] z v n cmp[31:0]
+Xxor1 n v i xor2
+Xor i z j or2
+Xmux ALUFN[2] ALUFN[1] 0 i z j cmp[0] mux4
+Xground cmp[31:1] constant0
+.ends
+
+.subckt boole32 ALUFN[3:0] A[31:0] B[31:0] boole[31:0]
+Xmux A[31:0] B[31:0] ALUFN[0]#32 ALUFN[1]#32 ALUFN[2]#32 ALUFN[3]#32 boole[31:0] mux4
+.ends
+
+.subckt shift32 ALUFN[1:0] A[31:0] B[4:0] shift[31:0]
+Xmuxl1 B[4]#32 A[31:0] A[15:0] 0#16 W[31:0] mux2
+Xmuxl2 B[3]#32 W[31:0] W[23:0] 0#8 X[31:0] mux2
+Xmuxl3 B[2]#32 X[31:0] X[27:0] 0#4 Y[31:0] mux2
+Xmuxl4 B[1]#32 Y[31:0] Y[29:0] 0#2 Z[31:0] mux2
+Xmuxl5 B[0]#32 Z[31:0] Z[30:0] 0 sl[31:0] mux2
+
+Xmuxr1 B[4]#32 A[31:0] 0#16 A[31:16] S[31:0] mux2
+Xmuxr2 B[3]#32 S[31:0] 0#8 S[31:8] T[31:0] mux2
+Xmuxr3 B[2]#32 T[31:0] 0#4 T[31:4] U[31:0] mux2
+Xmuxr4 B[1]#32 U[31:0] 0#2 U[31:2] V[31:0] mux2
+Xmuxr5 B[0]#32 V[31:0] 0 V[31:1] sr[31:0] mux2
+
+Xmuxra1 B[4]#32 A[31:0] A[31]#16 A[31:16] O[31:0] mux2
+Xmuxra2 B[3]#32 O[31:0] A[31]#8 O[31:8] P[31:0] mux2
+Xmuxra3 B[2]#32 P[31:0] A[31]#4 P[31:4] Q[31:0] mux2
+Xmuxra4 B[1]#32 Q[31:0] A[31]#2 Q[31:2] R[31:0] mux2
+Xmuxra5 B[0]#32 R[31:0] A[31] R[31:1] sra[31:0] mux2
+
+Xmux ALUFN[1]#32 ALUFN[0]#32 sl[31:0] 0#32 sr[31:0] sra[31:0] shift[31:0] mux4 
+.ends
+
+.subckt alu ALUFN[5:0] A[31:0] B[31:0] alu[31:0] z v n
+Xadd ALUFN[0] A[31:0] B[31:0] s[31:0] z v n adder32
+Xbool ALUFN[3:0] A[31:0] B[31:0] boole[31:0] boole32
+Xsht ALUFN[1:0] A[31:0] B[4:0] shift[31:0] shift32
+Xcmp ALUFN[2:1] z v n cmp[31:0] compare32
+Xmux ALUFN[5]#32 ALUFN[4]#32 s[31:0] shift[31:0] boole[31:0] cmp[31:0] alu[31:0] mux4
+.ends
