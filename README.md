@@ -3,6 +3,7 @@
 
 ## Team Members (Sign in yourself to test your github)  
 Poh Shi Hui  
+Gladys Chua
 
 ## 2D Brief  
 ![Image of Brief](/2D_Brief.png)  
