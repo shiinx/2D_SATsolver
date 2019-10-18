@@ -5,6 +5,7 @@
 Poh Shi Hui  
 Gladys Chua\
 Ng Ming Bing
+Pang Luying
 
 ## 2D Brief  
 ![Image of Brief](/2D_Brief.png)  
