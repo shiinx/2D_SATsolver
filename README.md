@@ -4,7 +4,7 @@
 ## Team Members (Sign in yourself to test your github)  
 Poh Shi Hui  
 Gladys Chua\
-Ng Ming Bing
+Ng Ming Bing\
 Pang Luying
 
 ## 2D Brief  
