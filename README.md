@@ -7,14 +7,11 @@ Gladys Chua Shi Ying
 Ng Ming Bing\
 Pang Luying    
 Seyong Park  
-Chua Yong Tek  
+Chua Yong Teck  
 name  
 test  
 oh
-wow
 
-wow  
-wow
 
 ## 2D Brief  
 ![Image of Brief](/2D_Brief.png)
