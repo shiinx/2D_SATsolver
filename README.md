@@ -3,7 +3,7 @@
 
 ## Team Members (Sign in yourself to test your github)  
 Poh Shi Hui  
-Gladys Chua\
+Gladys Chua Shi Ying  
 Ng Ming Bing\
 Pang Luying    
 Seyong Park  
