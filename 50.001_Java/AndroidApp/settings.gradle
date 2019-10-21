@@ -1,0 +1,2 @@
+include ':app', ':JavaLib1'
+rootProject.name='Code2D'
