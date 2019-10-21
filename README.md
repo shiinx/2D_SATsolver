@@ -8,7 +8,8 @@ Ng Ming Bing\
 Pang Luying    
 Seyong Park  
 Chua Yong Tek  
-name
+name  
+test  
 
 ## 2D Brief  
 ![Image of Brief](/2D_Brief.png)
