@@ -5,7 +5,9 @@
 Poh Shi Hui  
 Gladys Chua\
 Ng Ming Bing\
-Pang Luying try try
+Pang Luying    
+Seyong Park  
+Chua Yong Tek  
 
 ## 2D Brief  
 ![Image of Brief](/2D_Brief.png)  
