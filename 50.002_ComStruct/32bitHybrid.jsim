@@ -3,16 +3,6 @@
 .include "C:\Users\User\Desktop\GitHub\2D_SATsolver\50.002_ComStruct\8bitKSA.jsim"
 .include "C:\Users\User\Desktop\GitHub\2D_SATsolver\50.002_ComStruct\2dcheckoff_3ns.jsim"
 
-*alt xor
-
-.subckt altxor2 a b z
-Xinv1 a ainv inverter
-Xinv2 b binv inverter
-Xnand1 ainv b c nand2
-Xnand2 a binv d nand2
-Xnand3 c d z nand2
-.ends
-
 .subckt adder32 op0 A[31:0] B[31:0] s[31:0] z v n
 
 Xbuff4 op0 opBUFF1 buffer_2
