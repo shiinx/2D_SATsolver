@@ -1,0 +1,25 @@
+*32-bit FastCarry
+
+.subckt pgGenerator A B p g
+Xxor A B p xor2
+Xnand A B ginv nand2
+Xinv ginv g inverter
+.ends
+
+.subckt gGroupGenerate Gi Pj Gj gk
+Xnand4 Gi Pj bc nand2
+Xinv3 Gj ainv inverter
+Xnand5 ainv bc gk nand2
+.ends
+
+.subckt fastCarry A[31:0] B[31:0] cin aa ad ag
+.connect ci c[0]
+
+XpgGen A[31:0] B[31:0] pi[31:0] gi[31:0] pgGenerator
+XcGen c[31:0] pi[31:0] gi[31:0] c[32:1] gGroupGenerate
+
+.connect c[8] aa
+.connect c[16] ad
+.connect c[24] ag
+.ends
+

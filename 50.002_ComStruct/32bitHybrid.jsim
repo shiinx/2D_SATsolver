@@ -1,0 +1,70 @@
+.include "C:\Users\User\Desktop\GitHub\2D_SATsolver\50.002_ComStruct\stdcell.jsim"
+.include "C:\Users\User\Desktop\GitHub\2D_SATsolver\50.002_ComStruct\nominal.jsim"
+.include "C:\Users\User\Desktop\GitHub\2D_SATsolver\50.002_ComStruct\8bitKSA.jsim"
+.include "C:\Users\User\Desktop\GitHub\2D_SATsolver\50.002_ComStruct\2dcheckoff_3ns.jsim"
+
+*alt xor
+
+.subckt altxor2 a b z
+Xinv1 a ainv inverter
+Xinv2 b binv inverter
+Xnand1 ainv b c nand2
+Xnand2 a binv d nand2
+Xnand3 c d z nand2
+.ends
+
+.subckt adder32 op0 A[31:0] B[31:0] s[31:0] z v n
+
+Xbuff4 op0 opBUFF1 buffer_2
+Xbuff5 op0 opBUFF2 buffer_2
+Xbuff6 op0 opBUFF3 buffer_2
+Xbuff7 op0 opBUFF4 buffer_2
+
+* XB 
+Xxb1 B[31:24] opBUFF1#8 xb[31:24] xor2
+Xxb2 B[23:16] opBUFF2#8 xb[23:16] xor2
+Xxb3 B[15:8] opBUFF3#8 xb[15:8] xor2
+Xxb4 B[7:0] opBUFF4#8 xb[7:0] xor2
+
+*32 adder
+Xcla0 A[7:0] xb[7:0] op0 aa s[7:0] KSA8
+
+Xrca1 A[15:8] xb[15:8] 0 ab l[7:0] KSA8
+Xcla1 A[15:8] xb[15:8] vdd ac m[7:0] KSA8
+
+Xrca2 A[23:16] xb[23:16] 0 ae n[7:0] KSA8
+Xcla2 A[23:16] xb[23:16] vdd af o[7:0] KSA8
+
+Xrca3 A[31:24] xb[31:24] 0 ah p[7:0] KSA8
+Xcla3 A[31:24] xb[31:24] vdd ai q[7:0] KSA8
+
+*MUX
+Xbuff1 aa aaBUFF buffer_2
+Xmux1 aaBUFF#8 l[7:0] m[7:0] s[15:8] mux2
+Xmux2 aa ab ac ad mux2
+
+Xbuff2 ad adBUFF buffer_2
+Xmux3 adBUFF#8 n[7:0] o[7:0] s[23:16] mux2
+Xmux4 ad ae af ag mux2
+
+Xbuff3 ag agBUFF buffer_2
+Xmux5 agBUFF#8 p[7:0] q[7:0] s[31:24] mux2
+Xmux6 ag ah ai co mux2
+
+*Z
+Xnor1 s[7:0] s[15:8] s[23:16] s[31:24] i[7:0] nor4
+Xnand1 i[7:6] i[5:4] i[3:2] i[1:0] j[1:0] nand4
+Xnor2 j[1] j[0] z nor2
+
+*V
+Xsbar s[31] sbar inverter
+Xabar A[31] abar inverter
+Xxbbar xb[31] xbbar inverter
+
+Xnand2 A[31] xb[31] sbar abs nand3
+Xnand3 abar xbbar s[31] abss nand3
+Xnand4 abs abss v nand2 
+
+*N
+.connect s[31] n
+.ends
