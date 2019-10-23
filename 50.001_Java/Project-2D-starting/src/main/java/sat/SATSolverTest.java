@@ -21,7 +21,7 @@ public class SATSolverTest {
     Literal nc = c.getNegation();
 
 
-    public static Formula parse(String filename) {
+    public static Formula parseCNF(String filename) {
         try {
             BufferedReader br1 = new BufferedReader(new FileReader(filename));
             String line1;
@@ -61,21 +61,24 @@ public class SATSolverTest {
         }
     }
 
-    public static void solveCNF(String file) {
+    public static void solveSAT(String file) {
         System.out.println("File: " + file);
-        Formula f= parse(file);
+        Formula f2= parseCNF(file);
         String[] path = file.split("/");
-        String filename = path[path.length -1].split("\\.")[0];
+        File fileDirectory = new File(file);
+
+        String filename = fileDirectory.getParent() + "\\";
 
         System.out.println("SAT solve starts!!!");
         long started = System.nanoTime();
-        Environment e = SATSolver.solve(f);
+        Environment e = SATSolver.solve(f2);
         long time = System.nanoTime();
         long timeTaken = time - started;
         System.out.println("Time: " + timeTaken/1000000.0 + "ms");
         if (e != null) {
             System.out.println("satisfiable");
-            File txtFile = new File(filename + "BoolAssignment_"  + ".txt");
+            File txtFile = new File(filename + "BoolAssignment"  + ".txt");
+
 
             if (!txtFile.exists()){
                 try (Writer writeFile = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(txtFile), "utf-8"))){
@@ -105,9 +108,47 @@ public class SATSolverTest {
             System.exit(1);
         }
 
-        //String filename = args[0];
-        String filename = "D:\\SUTD Stuffs\\GitHub\\2D_SATsolver\\50.001_Java\\Project-2D-starting\\sampleCNF\\unsat1.cnf";
-        solveCNF(filename);
+        String filename = args[0];
+
+        solveSAT(filename);
 
     }
+    public void testSATSolver1(){
+        // (a v b)
+        Environment e = SATSolver.solve(makeFm(makeCl(a,b)) );
+/*
+        assertTrue( "one of the literals should be set to true",
+                Bool.TRUE == e.get(a.getVariable())
+                || Bool.TRUE == e.get(b.getVariable())  );
+
+*/
+    }
+
+
+    public void testSATSolver2(){
+        // (~a)
+        Environment e = SATSolver.solve(makeFm(makeCl(na)));
+/*
+        assertEquals( Bool.FALSE, e.get(na.getVariable()));
+*/
+    }
+
+    private static Formula makeFm(Clause... e) {
+        Formula f = new Formula();
+        for (Clause c : e) {
+            f = f.addClause(c);
+        }
+        return f;
+    }
+
+    private static Clause makeCl(Literal... e) {
+        Clause c = new Clause();
+        for (Literal l : e) {
+            c = c.add(l);
+        }
+        return c;
+    }
+
+
+
 }
