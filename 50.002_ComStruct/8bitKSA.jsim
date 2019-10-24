@@ -1,0 +1,51 @@
+*8-bit KSA
+
+.subckt pgGenerator A B p g
+Xxor A B p xor2
+Xnand A B ginv nand2
+Xinv ginv g inverter
+.ends
+
+.subckt pgGroupGenerate Pi Gi Pj Gj pk gk
+Xnand1 Pi Pj pkinv nand2
+Xinv1 pkinv pk inverter
+
+Xnand2 Gi Pj bc nand2
+Xinv2 Gj ainv inverter
+Xnand3 ainv bc gk nand2
+.ends
+
+.subckt gGroupGenerate Gi Pj Gj gk
+Xnand4 Gi Pj bc nand2
+Xinv3 Gj ainv inverter
+Xnand5 ainv bc gk nand2
+.ends
+
+.subckt KSA8 A[7:0] B[7:0] Ci co s[7:0]
+.connect Ci g[0]
+
+Xbuff1 Ci cBUFF buffer
+
+*step 0
+XpgGen A[7:0] B[7:0] pi[7:0] gi[7:0] pgGenerator
+
+*step 1
+Xg1 Ci pi[0] gi[0] g[1] gGroupGenerate
+Xpg1 pi[6:0] gi[6:0] pi[7:1] gi[7:1] pj[6:0] gj[6:0] pgGroupGenerate
+
+*step 2
+Xg2 cBUFF pj[0] gj[0] g[2] gGroupGenerate
+Xg3 g[1] pj[1] gj[1] g[3] gGroupGenerate
+Xpg2 pj[4:0] gj[4:0] pj[6:2] gj[6:2] pk[4:0] gk[4:0] pgGroupGenerate
+
+*step3
+Xg4 cBUFF pk[0] gk[0] g[4] gGroupGenerate
+Xg5 g[1] pk[1] gk[1] g[5] gGroupGenerate
+Xg6 g[2] pk[2] gk[2] g[6] gGroupGenerate
+Xg7 g[3] pk[3] gk[3] g[7] gGroupGenerate
+Xpg3 pk[0] gk[0] pk[4] gk[4] pl gl pgGroupGenerate
+
+Xg8 Ci pl gl co gGroupGenerate
+
+Xxor1 pi[7:0] g[7:0] s[7:0] xor2
+.ends
