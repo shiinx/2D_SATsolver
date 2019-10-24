@@ -52,13 +52,6 @@ public class Environment {
     public Environment putTrue(Variable v) {
         return new Environment (outpAns.put (v, Bool.TRUE));
     }
-    //to simplify code in the SATSolver, we created methods putTrue and putFalse that accepts literals as their arguments
-    public Environment putTrue(Literal l) {
-        if (l instanceof PosLiteral){
-            return putTrue(l.getVariable());
-        }
-        return putFalse(l.getVariable());
-    }
 
     /**
      * @return a new environment in which l has the value Bool.FALSE
@@ -67,12 +60,7 @@ public class Environment {
     public Environment putFalse(Variable v) {
         return new Environment (outpAns.put (v, Bool.FALSE));
     }
-    public Environment putFalse(Literal l) {
-        if (l instanceof PosLiteral){
-            return putFalse(l.getVariable());
-        }
-        return putTrue(l.getVariable());
-    }
+
     /**
      * @return the boolean value that l is bound to, or
      * the special UNDEFINED value of it is not bound

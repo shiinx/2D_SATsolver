@@ -8,6 +8,7 @@ import sat.env.Environment;
 import sat.formula.Clause;
 import sat.formula.Formula;
 import sat.formula.Literal;
+import sat.formula.PosLiteral;
 
 /**
  * A simple DPLL SAT solver. See http://en.wikipedia.org/wiki/DPLL_algorithm
@@ -25,7 +26,6 @@ public class SATSolver {
     public static Environment solve(Formula formula) {
         Environment env = new Environment();
         return solve(formula.getClauses(), env);
-
     }
 
     /**
@@ -40,41 +40,47 @@ public class SATSolver {
      * @return an environment for which all the clauses evaluate to Bool.TRUE,
      *         or null if no such environment exists.
      */
+
     private static Environment solve(ImList<Clause> clauses, Environment env) {
-        if (clauses.size() == 0){
-            return env;                                 //if no clauses left, return environment
+        if (clauses.size()==0){   //env has no clauses
+            return env;
         }
-        int literalsInClause = 2000;                    //set a value for smallest number of literals in a clause
-        Clause shortestClause = null;                   //to find the shortest clause
-        Iterator<Clause> iter = clauses.iterator();
-        while (iter.hasNext()){                         //iterating through the list of clauses
-            Clause c = iter.next();
-            int size = c.size();
-            if (size == 0)                              // if no literals in the clause, return null
+
+        Clause smallestC = clauses.first();
+        for(Clause i: clauses) {
+            if (i.isEmpty()) {                                  //Check for an empty clause using for each loop
                 return null;
+            }
+            if (smallestC.size() > i.size()) {
+                smallestC = i;                                  //Assign clause as smallest clause
+            }
+        }
+        Literal randomL = smallestC.chooseLiteral();            //Choose 1 literal at random from smallest clause
+            if (smallestC.isUnit()) {                           //Check if smallest clause contains only 1 literal
+                if (randomL instanceof PosLiteral) {            //Given clause only 1 Literal, if this literal is pos, assign it to be true
+                    Environment newEnvT = env.putTrue(randomL.getVariable());
+                    return solve(substitute(clauses,randomL), newEnvT);
+            }
+                else {                                          //if this literal is neg, assign it to be false and send to solve
+                    Environment newEnvF = env.putFalse(randomL.getVariable());
+                    return solve(substitute(clauses,randomL), newEnvF);
+            }
+        }
+            else {                                              //if smallest clause has more than 1 literal
+                Environment newEnvT = env.putTrue(randomL.getVariable()); //Assign literal true
+                ImList<Clause> newClauses = substitute(clauses, randomL); //Create a temp new list of clauses of substitute class
 
-            if (size < literalsInClause){
-                shortestClause = c;                     //while number of literals in clause is less than the defined value, set that number as the defined value for literalsInClause
-                literalsInClause = size;                //while number of literals in clause is less than the defined value, set that clause as the shortest clause
-            }
-        }
-        if (literalsInClause == 1){                                                     //if only 1 literal in the clause, set its value to true
-            env = env.putTrue(shortestClause.chooseLiteral());
-            return (solve(substitute(clauses,shortestClause.chooseLiteral()), env));
-        }
-        else{
-            Literal l = shortestClause.chooseLiteral();                                 //choose the first literal in the clause
-            env = env.putTrue(l);                                                       //and assign it a TRUE value
-            Environment testAns = solve(substitute(clauses, l),env);                    //create new clause list and solve
-            if (testAns == null){                                                       //if is unsatisfied
-                env = env.putFalse(l);                                                  //set FALSE value instead
-                return solve(substitute(clauses,l.getNegation()),env);                  //create new clause list and solve
-            }
-            else{
-                return testAns;
-            }
-        }
+                Environment potSoln = solve(newClauses,newEnvT); //Create new environment and solve by settingb lit to True
+                if (potSoln != null){
+                    return potSoln;
 
+                }
+                else{
+                    Environment newEnvF = env.putFalse(randomL.getVariable());
+                    return solve(substitute(clauses,randomL.getNegation()), newEnvF);
+                }
+
+        }
     }
 
     /**
@@ -93,9 +99,9 @@ public class SATSolver {
         Iterator<Clause> iterator = clauses.iterator();                         //create iterator of input list of clauses
         while (iterator.hasNext()){
             Clause clause = iterator.next();
-            if (clause.contains(l)||clause.contains(l.getNegation()))           //as long as the input literal is within the clause, regardless of value
-                clause = clause.reduce(l);                                      //remove it from the clause
-            if (clause != null) outpClauseList = outpClauseList.add(clause);    //add the clause to the created list of clauses
+            if (clause.contains(l)||clause.contains(l.getNegation()))           //as long as the input literal is within the clause, regardless of true/false
+                clause = clause.reduce(l);                                      //perform reduction ie, if its true, remove entire clause, else remove only literal l
+            if (clause != null) outpClauseList = outpClauseList.add(clause);    //add the clause to the new list of clauses
         }
         return outpClauseList;
     }
