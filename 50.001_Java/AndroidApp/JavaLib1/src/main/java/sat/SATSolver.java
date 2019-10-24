@@ -42,7 +42,7 @@ public class SATSolver {
      */
 
     private static Environment solve(ImList<Clause> clauses, Environment env) {
-        if (clauses.size()==0){   //env has no clauses
+        if (clauses.size()==0){                                 //env has no clauses
             return env;
         }
 
@@ -56,68 +56,31 @@ public class SATSolver {
             }
         }
         Literal randomL = smallestC.chooseLiteral();            //Choose 1 literal at random from smallest clause
-            if (smallestC.isUnit()) {                           //Check if smallest clause contains only 1 literal
-                if (randomL instanceof PosLiteral) {            //Given clause only 1 Literal, if this literal is pos, assign it to be true
-                    Environment newEnvT = env.putTrue(randomL.getVariable());
-                    return solve(substitute(clauses,randomL), newEnvT);
+        if (smallestC.isUnit()) {                           //Check if smallest clause contains only 1 literal
+            if (randomL instanceof PosLiteral) {            //Given clause only 1 Literal, if this literal is pos, assign it to be true
+                Environment newEnvT = env.putTrue(randomL.getVariable());
+                return solve(substitute(clauses,randomL), newEnvT);
             }
-                else {                                          //if this literal is neg, assign it to be false and send to solve
-                    Environment newEnvF = env.putFalse(randomL.getVariable());
-                    return solve(substitute(clauses,randomL), newEnvF);
+            else {                                          //if this literal is neg, assign it to be false and send to solve
+                Environment newEnvF = env.putFalse(randomL.getVariable());
+                return solve(substitute(clauses,randomL), newEnvF);
             }
         }
-            else {                                              //if smallest clause has more than 1 literal
-                Environment newEnvT = env.putTrue(randomL.getVariable()); //Assign literal true
-                ImList<Clause> newClauses = substitute(clauses, randomL); //Create a temp new list of clauses of substitute class
+        else {                                              //if smallest clause has more than 1 literal
+            Environment newEnvT = env.putTrue(randomL.getVariable()); //Assign literal true
+            ImList<Clause> newClauses = substitute(clauses, randomL); //Create a temp new list of clauses of substitute class
 
-                Environment potSoln = solve(newClauses,newEnvT); //Create new environment and solve by settingb lit to True
-                if (potSoln != null){
-                    return potSoln;
-
+            Environment potSoln = solve(newClauses, newEnvT); //Create new environment and solve by settingb lit to True
+            if (potSoln != null) {
+                return potSoln;
                 }
-                else{
-                    Environment newEnvF = env.putFalse(randomL.getVariable());
-                    return solve(substitute(clauses,randomL.getNegation()), newEnvF);
+          
+            else{
+                Environment newEnvF = env.putFalse(randomL.getVariable());
+                return solve(substitute(clauses,randomL.getNegation()), newEnvF);
                 }
-
-
-        if (clauses.size() == 0) {
-            return env;
-        } //env has no clauses
-
-        Clause smallest_Clause = clauses.first();
-        for (Clause i : clauses) {
-
-            if (i.isEmpty()) { //Check for an empty clause
-                return null;
-            }
-            if (smallest_Clause.size() > i.size()) { //track the smallest clause
-                smallest_Clause = i;
-            }
         }
-        Literal literal = smallest_Clause.chooseLiteral(); // Randomly picking a literal
-        if (smallest_Clause.isUnit()) { //if smallest only contains 1 literal
-            if (literal instanceof PosLiteral) {
-                Environment new_env_true = env.putTrue(literal.getVariable());
-                return solve(substitute(clauses, literal), new_env_true);
-            } else {
-                Environment new_env_false = env.putFalse(literal.getVariable());
-                return solve(substitute(clauses, literal), new_env_false);
-            }
-        } else {
-            Environment new_env_true = env.putTrue(literal.getVariable());
-            ImList<Clause> new_temp_clauses = substitute(clauses, literal);
 
-            Environment possible_solution = solve(new_temp_clauses, new_env_true);
-            if (possible_solution == null) {
-                Environment new_env_false = env.putFalse(literal.getVariable());
-                return solve(substitute(clauses, literal.getNegation()), new_env_false);
-
-            } else {
-                return possible_solution;
-            }
-
-        }
     }
 
     /**
