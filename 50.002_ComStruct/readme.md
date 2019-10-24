@@ -3,8 +3,10 @@
 <sub>Architecture used is, below 3ns and easy to do and rather huge</sub>  
 <sub>To obtain maximum score in the Computation Structure component, an adder architecture below 3ns is required.</sub>  
 
-Uses a Hybrid architecture to make life easier.  <sub>(In regards to jsim and circuit complexity.)</sub>  
+## Hybrid combination of Carry Look-Ahead (Kogge-Stone) and Carry select. 
+
+Uses a Hybrid architecture to make life easier.  
+<sub><sup>(In regards to jsim and circuit complexity.</sup></sub>  
   
-## Hybrid combination of Carry Look-Ahead (Kogge-Stone) and Carry select.  
 Circuit diagram:
 
