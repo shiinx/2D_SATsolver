@@ -42,6 +42,7 @@ public class SATSolver {
      */
 
     private static Environment solve(ImList<Clause> clauses, Environment env) {
+<<<<<<< HEAD
         if (clauses.size()==0){   //env has no clauses
             return env;
         }
@@ -80,6 +81,44 @@ public class SATSolver {
                     return solve(substitute(clauses,randomL.getNegation()), newEnvF);
                 }
 
+=======
+        if (clauses.size() == 0) {
+            return env;
+        } //env has no clauses
+
+        Clause smallest_Clause = clauses.first();
+        for (Clause i : clauses) {
+
+            if (i.isEmpty()) { //Check for an empty clause
+                return null;
+            }
+            if (smallest_Clause.size() > i.size()) { //track the smallest clause
+                smallest_Clause = i;
+            }
+        }
+        Literal literal = smallest_Clause.chooseLiteral(); // Randomly picking a literal
+        if (smallest_Clause.isUnit()) { //if smallest only contains 1 literal
+            if (literal instanceof PosLiteral) {
+                Environment new_env_true = env.putTrue(literal.getVariable());
+                return solve(substitute(clauses, literal), new_env_true);
+            } else {
+                Environment new_env_false = env.putFalse(literal.getVariable());
+                return solve(substitute(clauses, literal), new_env_false);
+            }
+        } else {
+            Environment new_env_true = env.putTrue(literal.getVariable());
+            ImList<Clause> new_temp_clauses = substitute(clauses, literal);
+
+            Environment possible_solution = solve(new_temp_clauses, new_env_true);
+            if (possible_solution == null) {
+                Environment new_env_false = env.putFalse(literal.getVariable());
+                return solve(substitute(clauses, literal.getNegation()), new_env_false);
+
+            } else {
+                return possible_solution;
+            }
+
+>>>>>>> 77929e736590752aafcab1cd6651d9bf97a876f4
         }
     }
 

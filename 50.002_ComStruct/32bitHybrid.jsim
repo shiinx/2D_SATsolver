@@ -1,7 +1,7 @@
 .include "stdcell.jsim"
 .include "nominal.jsim"
 .include "8bitKSA.jsim"
-.include "2dcheckoff_files\2dcheckoff_2p3ns.jsim"
+.include "2dcheckoff_files\2dcheckoff_3ns.jsim"
 
 .subckt adder32 op0 A[31:0] B[31:0] s[31:0] z v n
 
