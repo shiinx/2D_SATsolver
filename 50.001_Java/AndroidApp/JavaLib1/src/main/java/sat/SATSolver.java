@@ -8,6 +8,7 @@ import sat.env.Environment;
 import sat.formula.Clause;
 import sat.formula.Formula;
 import sat.formula.Literal;
+import sat.formula.PosLiteral;
 
 /**
  * A simple DPLL SAT solver. See http://en.wikipedia.org/wiki/DPLL_algorithm
@@ -41,40 +42,43 @@ public class SATSolver {
      *         or null if no such environment exists.
      */
     private static Environment solve(ImList<Clause> clauses, Environment env) {
-        if (clauses.size() == 0){
-            return env;                                 //if no clauses left, return environment
-        }
-        int literalsInClause = 2000;                    //set a value for smallest number of literals in a clause
-        Clause shortestClause = null;                   //to find the shortest clause
-        Iterator<Clause> iter = clauses.iterator();
-        while (iter.hasNext()){                         //iterating through the list of clauses
-            Clause c = iter.next();
-            int size = c.size();
-            if (size == 0)                              // if no literals in the clause, return null
+        if (clauses.size() == 0) {
+            return env;
+        } //env has no clauses
+
+        Clause smallest_Clause = clauses.first();
+        for (Clause i : clauses) {
+
+            if (i.isEmpty()) { //Check for an empty clause
                 return null;
+            }
+            if (smallest_Clause.size() > i.size()) { //track the smallest clause
+                smallest_Clause = i;
+            }
+        }
+        Literal literal = smallest_Clause.chooseLiteral(); // Randomly picking a literal
+        if (smallest_Clause.isUnit()) { //if smallest only contains 1 literal
+            if (literal instanceof PosLiteral) {
+                Environment new_env_true = env.putTrue(literal.getVariable());
+                return solve(substitute(clauses, literal), new_env_true);
+            } else {
+                Environment new_env_false = env.putFalse(literal.getVariable());
+                return solve(substitute(clauses, literal), new_env_false);
+            }
+        } else {
+            Environment new_env_true = env.putTrue(literal.getVariable());
+            ImList<Clause> new_temp_clauses = substitute(clauses, literal);
 
-            if (size < literalsInClause){
-                shortestClause = c;                     //while number of literals in clause is less than the defined value, set that number as the defined value for literalsInClause
-                literalsInClause = size;                //while number of literals in clause is less than the defined value, set that clause as the shortest clause
-            }
-        }
-        if (literalsInClause == 1){                                                     //if only 1 literal in the clause, set its value to true
-            env = env.putTrue(shortestClause.chooseLiteral());
-            return (solve(substitute(clauses,shortestClause.chooseLiteral()), env));
-        }
-        else{
-            Literal l = shortestClause.chooseLiteral();                                 //choose the first literal in the clause
-            env = env.putTrue(l);                                                       //and assign it a TRUE value
-            Environment testAns = solve(substitute(clauses, l),env);                    //create new clause list and solve
-            if (testAns == null){                                                       //if is unsatisfied
-                env = env.putFalse(l);                                                  //set FALSE value instead
-                return solve(substitute(clauses,l.getNegation()),env);                  //create new clause list and solve
-            }
-            else{
-                return testAns;
-            }
-        }
+            Environment possible_solution = solve(new_temp_clauses, new_env_true);
+            if (possible_solution == null) {
+                Environment new_env_false = env.putFalse(literal.getVariable());
+                return solve(substitute(clauses, literal.getNegation()), new_env_false);
 
+            } else {
+                return possible_solution;
+            }
+
+        }
     }
 
     /**
