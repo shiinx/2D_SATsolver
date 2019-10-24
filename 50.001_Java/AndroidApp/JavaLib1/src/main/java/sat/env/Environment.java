@@ -7,12 +7,15 @@
 package sat.env;
 import immutable.ImListMap;
 import immutable.ImMap;
+import sat.formula.Literal;
+import sat.formula.PosLiteral;
+import sat.formula.NegLiteral;
 
 /**
  * An environment is an immutable mapping from variables to boolean values.
  * A special 3-valued Bool type is used to handle the case
  * in which a variable is to be evaluated that has no binding.
- * 
+ *
  * Typically, clients are expected to bind variables explicitly only
  * to Bool.TRUE and Bool.FALSE, and Bool.UNDEFINED is used only
  * to return a boolean value for an unbound variable. But this
@@ -22,12 +25,12 @@ import immutable.ImMap;
 public class Environment {
     /*
      * Rep invariant
-     *     bindings != null
+     *     outpAns != null
      */
-    private ImMap <Variable, Bool> bindings;
+    private ImMap <Variable, Bool> outpAns;
 
-    private Environment(ImMap <Variable, Bool> bindings) {
-        this.bindings = bindings;
+    private Environment(ImMap <Variable, Bool> outpAns) {
+        this.outpAns = outpAns;
     }
 
     public Environment() {
@@ -39,7 +42,7 @@ public class Environment {
      * if a binding for l already exists, overwrites it
      */
     public Environment put(Variable v, Bool b) {
-        return new Environment (bindings.put (v, b));
+        return new Environment (outpAns.put (v, b));
     }
 
     /**
@@ -47,7 +50,14 @@ public class Environment {
      * if a binding for l already exists, overwrites it
      */
     public Environment putTrue(Variable v) {
-        return new Environment (bindings.put (v, Bool.TRUE));
+        return new Environment (outpAns.put (v, Bool.TRUE));
+    }
+    //to simplify code in the SATSolver, we created methods putTrue and putFalse that accepts literals as their arguments
+    public Environment putTrue(Literal l) {
+        if (l instanceof PosLiteral){
+            return putTrue(l.getVariable());
+        }
+        return putFalse(l.getVariable());
     }
 
     /**
@@ -55,21 +65,26 @@ public class Environment {
      * if a binding for l already exists, overwrites it
      */
     public Environment putFalse(Variable v) {
-        return new Environment (bindings.put (v, Bool.FALSE));
+        return new Environment (outpAns.put (v, Bool.FALSE));
     }
-
+    public Environment putFalse(Literal l) {
+        if (l instanceof PosLiteral){
+            return putFalse(l.getVariable());
+        }
+        return putTrue(l.getVariable());
+    }
     /**
      * @return the boolean value that l is bound to, or
      * the special UNDEFINED value of it is not bound
      */
     public Bool get(Variable v){
-        Bool b = bindings.get(v);
+        Bool b = outpAns.get(v);
         if (b==null) return Bool.UNDEFINED;
         else return b;
     }
 
     @Override
     public String toString () {
-        return "Environment:" + bindings;
+        return "Environment:" + outpAns;
     }
 }
