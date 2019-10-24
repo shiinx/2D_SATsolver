@@ -42,7 +42,7 @@ public class SATSolver {
      */
 
     private static Environment solve(ImList<Clause> clauses, Environment env) {
-        if (clauses.size()==0){   //env has no clauses
+        if (clauses.size()==0){                                 //env has no clauses
             return env;
         }
 
@@ -73,14 +73,14 @@ public class SATSolver {
             Environment potSoln = solve(newClauses, newEnvT); //Create new environment and solve by settingb lit to True
             if (potSoln != null) {
                 return potSoln;
-
-            }
-            else {
-                Environment newEnvF = env.putFalse(randomL.getVariable());
-                return solve(substitute(clauses, randomL.getNegation()), newEnvF);
                 }
+          
+            else{
+                Environment newEnvF = env.putFalse(randomL.getVariable());
+                return solve(substitute(clauses,randomL.getNegation()), newEnvF);
+                }
+        }
 
-            }
     }
 
     /**
