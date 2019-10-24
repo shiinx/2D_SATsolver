@@ -42,7 +42,6 @@ public class SATSolver {
      */
 
     private static Environment solve(ImList<Clause> clauses, Environment env) {
-<<<<<<< HEAD
         if (clauses.size()==0){   //env has no clauses
             return env;
         }
@@ -81,7 +80,7 @@ public class SATSolver {
                     return solve(substitute(clauses,randomL.getNegation()), newEnvF);
                 }
 
-=======
+
         if (clauses.size() == 0) {
             return env;
         } //env has no clauses
@@ -118,7 +117,6 @@ public class SATSolver {
                 return possible_solution;
             }
 
->>>>>>> 77929e736590752aafcab1cd6651d9bf97a876f4
         }
     }
 
