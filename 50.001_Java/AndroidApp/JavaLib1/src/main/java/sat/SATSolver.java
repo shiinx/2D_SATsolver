@@ -56,27 +56,28 @@ public class SATSolver {
             }
         }
         Literal randomL = smallestC.chooseLiteral();            //Choose 1 literal at random from smallest clause
-            if (smallestC.isUnit()) {                           //Check if smallest clause contains only 1 literal
-                if (randomL instanceof PosLiteral) {            //Given clause only 1 Literal, if this literal is pos, assign it to be true
-                    Environment newEnvT = env.putTrue(randomL.getVariable());
-                    return solve(substitute(clauses,randomL), newEnvT);
+        if (smallestC.isUnit()) {                           //Check if smallest clause contains only 1 literal
+            if (randomL instanceof PosLiteral) {            //Given clause only 1 Literal, if this literal is pos, assign it to be true
+                Environment newEnvT = env.putTrue(randomL.getVariable());
+                return solve(substitute(clauses,randomL), newEnvT);
             }
-                else {                                          //if this literal is neg, assign it to be false and send to solve
-                    Environment newEnvF = env.putFalse(randomL.getVariable());
-                    return solve(substitute(clauses,randomL), newEnvF);
+            else {                                          //if this literal is neg, assign it to be false and send to solve
+                Environment newEnvF = env.putFalse(randomL.getVariable());
+                return solve(substitute(clauses,randomL), newEnvF);
             }
         }
-            else {                                              //if smallest clause has more than 1 literal
-                Environment newEnvT = env.putTrue(randomL.getVariable()); //Assign literal true
-                ImList<Clause> newClauses = substitute(clauses, randomL); //Create a temp new list of clauses of substitute class
+        else {                                              //if smallest clause has more than 1 literal
+            Environment newEnvT = env.putTrue(randomL.getVariable()); //Assign literal true
+            ImList<Clause> newClauses = substitute(clauses, randomL); //Create a temp new list of clauses of substitute class
 
-                Environment potSoln = solve(newClauses, newEnvT); //Create new environment and solve by settingb lit to True
-                if (potSoln != null) {
-                    return potSoln;
+            Environment potSoln = solve(newClauses, newEnvT); //Create new environment and solve by settingb lit to True
+            if (potSoln != null) {
+                return potSoln;
 
-                } else {
-                    Environment newEnvF = env.putFalse(randomL.getVariable());
-                    return solve(substitute(clauses, randomL.getNegation()), newEnvF);
+            }
+            else {
+                Environment newEnvF = env.putFalse(randomL.getVariable());
+                return solve(substitute(clauses, randomL.getNegation()), newEnvF);
                 }
 
             }
