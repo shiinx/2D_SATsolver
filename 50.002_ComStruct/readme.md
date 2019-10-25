@@ -18,7 +18,16 @@ Uses a Hybrid architecture to make life easier.
   Carry can only be either 0 or 1. So results for both possibilities are generated.  
   The mux will select the appropriate S to output depending on the carry.  
   
-## .BC  
+## .jsim  
+* **Relavant files**  
+	32bitHybrid.jsim  
+	8bitKSA.jsim  
+  
+32bitHybrid contains the main circuit and code  
+8bitKSA contains code for a 8-bit KSA
+
+
+## .bc  
 Different output bits were chosen for testing  
 **s7.bc** : Compare S[7] bit of **Cascade Ripple Adder** if equal to S[7] of **Kogge-Stone Adder**  
 **s12.bc** : Compare S[12] bit of **Cascade Ripple Adder** if equal to S[12] of **Hybrid Kogge-Stone w/ Carry Select Adder** (Using PG method)  
