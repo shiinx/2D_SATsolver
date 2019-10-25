@@ -11,22 +11,20 @@ Uses a Hybrid architecture to make life easier.
 ## Circuit diagram  
 ![Image of circuit](/circuit.jpg)  
 
-* Each KSA is 8-bit 
- 
-...Takes in 8-bits of A, 8-bits of B and outputs 8-bits of SUM  
-* Depending on carry output from the first Carry out, **C8**, the corresponding appropriate **s[8] to s[31]** will be selected from the other KSA outputs.  
- 
-...The 6 KSA on the right will produce sum result depending on the A and B input.  
-...Carry can only be either 0 or 1. So results for both possibilities are generated.  
-...The mux will select the appropriate S to output depending on the carry.  
+* **Each KSA is 8-bit**  
+  Takes in 8-bits of A, 8-bits of B and outputs 8-bits of SUM  
+* Depending on carry output from the first Carry out, **C8**, the corresponding appropriate **s[8] to s[31]** will be selected from the other KSA outputs  
+  The 6 KSA on the right will produce sum result depending on the A and B input.  
+  Carry can only be either 0 or 1. So results for both possibilities are generated.  
+  The mux will select the appropriate S to output depending on the carry.  
   
 ## .BC  
-Different output bits were chosen for testing.  
-s7.bc : Compare S[7] bit of **Cascade Ripple Adder** if equal to S[7] of **Kogge-Stone Adder**  
-s12.bc : Compare S[12] bit of **Cascade Ripple Adder** if equal to S[12] of **Hybrid Kogge-Stone w/ Carry Select Adder** (Using PG method)  
-s15.bc : Compare S[12] bit of **Cascade Ripple Adder** if equal to S[12] of **Hybrid Kogge-Stone w/ Carry Select Adder** (Using Boolean Algebra Expression)  
+Different output bits were chosen for testing  
+**s7.bc** : Compare S[7] bit of **Cascade Ripple Adder** if equal to S[7] of **Kogge-Stone Adder**  
+**s12.bc** : Compare S[12] bit of **Cascade Ripple Adder** if equal to S[12] of **Hybrid Kogge-Stone w/ Carry Select Adder** (Using PG method)  
+**s15.bc** : Compare S[12] bit of **Cascade Ripple Adder** if equal to S[12] of **Hybrid Kogge-Stone w/ Carry Select Adder** (Using Boolean Algebra Expression)  
 
-s7 checks for KSA while s12 and s15 checks both KSA and selector.
+s7 checks for KSA while s12 and s15 checks both KSA and selector  
 
 ## .cnf  
-Conversion of .bc to .cnf using the bctocnf converter.
+Conversion of .bc to .cnf using the bctocnf converter  
