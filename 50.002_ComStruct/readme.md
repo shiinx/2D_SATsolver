@@ -9,7 +9,7 @@ Uses a Hybrid architecture to make life easier.
 <sub><sup>(In regards to jsim and circuit complexity.</sup></sub>  
   
 ## Circuit diagram  
-![Image of circuit](/circuit.jpg)  
+![Image of circuit](/50.002_ComStruct/Circuit.jpg)  
 
 * **Each KSA is 8-bit**  
   Takes in 8-bits of A, 8-bits of B and outputs 8-bits of SUM  
