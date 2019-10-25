@@ -6,7 +6,7 @@
 ## Hybrid combination of Carry Look-Ahead (Kogge-Stone) and Carry select.  
   
 Uses a Hybrid architecture to make life easier.  
-<sub><sup>(In regards to jsim and circuit complexity.</sup></sub>  
+<sub><sup>(In regards to jsim and circuit complexity)</sup></sub>  
   
 ## Circuit diagram  
 ![Image of circuit](/50.002_ComStruct/Circuit.jpg)  
