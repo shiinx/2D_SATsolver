@@ -7,7 +7,7 @@ Gladys Chua Shi Ying
 Ng Ming Bing\
 Pang Luying    
 Seyong Park  
-Chua Yong Teck  
+Chua Yong Tek  
 
 
 ## 2D Brief  
