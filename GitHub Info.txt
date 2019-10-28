@@ -1,0 +1,16 @@
+master bracnh	- MAIN/DEFAULT workspace
+branch 		- seperate workspace from MAIN workspace
+commit 		- save changes made locally
+push 		- push committed local changes online
+publish 	- publish created branch online
+pull request 	- create request to pull your branch into another branch
+merge branch 	- merge the branch into your branch
+
+steps					
+1) new branch			local 	(git desktop)
+2) publish branch		online 	(git desktop)
+3) do code changes		local 	(IDE)
+4) commit changes		local 	(git desktop)
+5) push commit			online 	(git desktop)
+6) pull request			online 	(github website)
+7) accept request and merge 	online 	(github website)
