@@ -5,7 +5,7 @@
 Poh Shi Hui  
 Gladys Chua Shi Ying  
 Ng Ming Bing  
-Pang Luyin    
+Pang Luying    
 Seyong Park  
 Chua Yong Tek  
 
