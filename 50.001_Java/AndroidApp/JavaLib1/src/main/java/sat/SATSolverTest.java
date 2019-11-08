@@ -6,10 +6,9 @@ package sat;
  import org.junit.Test;
  */
 
-import sat.env.*;
 import sat.formula.*;
-
 import java.io.*;
+import java.util.Iterator;
 
 
 public class SATSolverTest {
@@ -19,6 +18,7 @@ public class SATSolverTest {
     Literal na = a.getNegation();
     Literal nb = b.getNegation();
     Literal nc = c.getNegation();
+    private static Graph g = new Graph();
 
 
     public static Formula parseCNF(String filename) {
@@ -61,45 +61,56 @@ public class SATSolverTest {
         }
     }
 
+    public static Graph getGraph(){
+        return g;
+    }
+
+    public static void doEdges(Formula f){
+        Iterator<Clause> it;
+        it = f.getClauses().iterator();
+        while(it.hasNext()){
+            Iterator<Literal> it2;
+            it2 = it.next().iterator();
+            while(it2.hasNext()){
+                Literal l = it2.next();
+                Literal l2;
+                if (it2.hasNext()) {
+                    l2 = it2.next();
+                }else{
+                    l2 = l;
+                }
+                g.addEdge(l.getNegation() , l2);
+                g.addEdge(l2.getNegation() , l);
+            }
+        }
+    }
+
+
     public static void solveSAT(String file) {
         System.out.println("File: " + file);
         Formula f2= parseCNF(file);
-        String[] path = file.split("/");
-        File fileDirectory = new File(file);
-
-        String filename = fileDirectory.getParent() + "\\";
-
-        System.out.println("SAT solve starts!!!");
-        long started = System.nanoTime();
-        Environment e = SATSolver.solve(f2);
-        long time = System.nanoTime();
-        long timeTaken = time - started;
-        System.out.println("Time: " + timeTaken/1000000.0 + "ms");
-        if (e != null) {
-            System.out.println("satisfiable");
-            File txtFile = new File(filename + "BoolAssignment"  + ".txt");
-
-
-            if (!txtFile.exists()){
-                try (Writer writeFile = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(txtFile), "utf-8"))){
-
-                    String s = e.toString().replace("Environment:[", "");
-                    s = s.replace("]", "");
-                    String[] lines = s.split(", ");
-                    for (String line: lines) {
-                        writeFile.write(line + "\r\n");
-                    }
-                    writeFile.close();
-                    System.out.println("Wrote solution to " + filename + "BoolAssignment_"  + ".txt");
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
+        if(f2 != null) {
+            doEdges(f2);
+            System.out.println("SAT solve starts!!!");
+            Graph graph = getGraph();
+            long started = System.nanoTime();
+            try {
+                graph.doDFS();
+                long time = System.nanoTime();
+                long timeTaken = time - started;
+                System.out.println("Time:" + timeTaken/1_000_000.0 + "ms");
+                System.out.println("Satisfiable");
+                System.out.println(graph.getResult());
+            } catch(Exception e){
+                // if unsatisfiable, will enter exception and print unsatisfiable
+                System.out.println(e);
             }
+        }
+        else{
+            System.out.println("File error");
+        }
 
-        }
-        else {
-            System.out.println("unsatisfiable");
-        }
+
     }
 
     public static void main(String[] args) {
@@ -113,25 +124,7 @@ public class SATSolverTest {
         solveSAT(filename);
 
     }
-    public void testSATSolver1(){
-        // (a v b)
-        Environment e = SATSolver.solve(makeFm(makeCl(a,b)) );
-/*
-        assertTrue( "one of the literals should be set to true",
-                Bool.TRUE == e.get(a.getVariable())
-                || Bool.TRUE == e.get(b.getVariable())  );
 
-*/
-    }
-
-
-    public void testSATSolver2(){
-        // (~a)
-        Environment e = SATSolver.solve(makeFm(makeCl(na)));
-/*
-        assertEquals( Bool.FALSE, e.get(na.getVariable()));
-*/
-    }
 
     private static Formula makeFm(Clause... e) {
         Formula f = new Formula();

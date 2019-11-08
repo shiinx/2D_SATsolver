@@ -1,2 +1,17 @@
 
 *.bak
+*.jar
+JavaLib/build
+50.001_Java/AndroidApp/JavaLib1/build/.transforms/99e0fc187eb88c6eef56945887ee2659/JavaLib1/classes.dex
+50.001_Java/AndroidApp/JavaLib1/build/.transforms/99e0fc187eb88c6eef56945887ee2659/JavaLib1/classes.dex
+50.001_Java/AndroidApp/JavaLib1/build/.transforms/99e0fc187eb88c6eef56945887ee2659/JavaLib1/classes.dex
+50.001_Java/AndroidApp/JavaLib1/build/classes/java/main/sat/Graph.class
+50.001_Java/AndroidApp/JavaLib1/build/classes/java/main/sat/SATSolver.class
+50.001_Java/AndroidApp/JavaLib1/build/classes/java/main/sat/SATSolverTest.class
+*.class
+*.dex
+50.001_Java/AndroidApp/JavaLib1/build/classes/java/main/sat/SATSolverTest.class
+50.001_Java/AndroidApp/JavaLib1/build/classes/java/main/sat/SATSolver.class
+50.001_Java/AndroidApp/JavaLib1/build/.transforms/99e0fc187eb88c6eef56945887ee2659/JavaLib1/classes.dex
+*.dex
+*.jar
